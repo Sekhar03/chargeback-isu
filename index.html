@@ -207,7 +207,7 @@ overflow-y:auto; background:var(--bg); display:none;
 .sidebar-logo{ display:flex; align-items:center; gap:12px; padding:0 4px 22px; cursor:pointer; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.1); }
 .sidebar-logo .mark{ width:42px; height:42px; border-radius:14px; background:var(--grad); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 8px 22px -6px rgba(79,70,229,0.75); }
 .sidebar-logo .mark svg{ width:22px; height:22px; }
-.sidebar-brand-img{ height:25px; width:auto; max-width:145px; display:block; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(6,191,213,0.3)); }
+.sidebar-brand-img{ height:28px; width:auto; max-width:145px; display:block; object-fit:contain; filter:brightness(0) invert(1); }
 .sidebar-logo .txt{ font-family:'Sora',sans-serif; font-weight:800; font-size:18px; color:#fff; letter-spacing:-0.4px; line-height:1.2; }
 .sidebar-logo .txt span{ color:#38BDF8; }
 .sidebar-logo .sub-txt{ font-size:11.5px; font-weight:700; color:#38BDF8; margin-top:3px; letter-spacing:0.3px; }
@@ -1738,7 +1738,7 @@ footer.pager{ display:flex; align-items:center; justify-content:space-between; p
         <img src="iserveu-logo.png" alt="iServeU®" style="height:36px; width:auto; max-width:200px; display:inline-block; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <h1 style="display:none; margin:0;"><span style="color:#06BFD5;">iServeU</span><span style="font-size:13px; vertical-align:super; color:#94A3B8;">®</span></h1>
       </div>
-      <div class="sub-headline">Welcome to iServeU DisputeOps AI</div>
+      <div class="sub-headline">Welcome to DisputeOps AI</div>
       <div class="sub-caption">Log in to continue to the DisputeOps AI Portal</div>
 
       <div class="field">
@@ -1820,7 +1820,7 @@ Dispute Management
 <!-- FIRST DASHBOARD HERO BOX -->
 <div class="hero-banner">
 <div class="hero-content-left">
-<h1>Welcome to iServeU DisputeOps AI</h1>
+<h1>Welcome to DisputeOps AI</h1>
 <p class="hint">Track, manage and resolve disputes efficiently — all in one place.</p>
 <div style="display:flex; align-items:center; gap:10px; margin-top:8px; flex-wrap:wrap;">
 
@@ -3826,8 +3826,17 @@ function openDeclineFromHub() {
   closeHubModal();
 }
 
-function submitRepresentment(){ closeHubModal(); pingToast('Representment evidence submitted to Visa network successfully!'); }
-function acceptLiability(){ closeHubModal(); pingToast('Liability accepted. Case closed.'); }
+function submitRepresentment(){ closeRepresentModal(); pingToast('Representment evidence submitted to Visa network successfully!'); }
+function acceptLiability(){ closeRepresentModal(); pingToast('Liability accepted. Case closed.'); }
+function closeRepresentModal(){ const m = document.getElementById('modalOverlay'); if(m) m.classList.remove('show'); }
+function openRepresentModalDialog(caseId, amount, reason){
+  const m = document.getElementById('modalOverlay');
+  if(!m) return;
+  if(caseId) { const t = document.getElementById('mCaseTitle'); if(t) t.textContent = 'Representment — ' + caseId; }
+  if(amount) { const a = document.getElementById('mAmtTxt'); if(a) a.textContent = amount; }
+  if(reason) { const r = document.getElementById('mReasonTxt'); if(r) r.textContent = reason; }
+  m.classList.add('show');
+}
 
 document.addEventListener('DOMContentLoaded', () => { 
   updateTabBadges();
@@ -4211,8 +4220,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function runTour() {
     try {
-      // ──── STEP 1 / 36: Starting on Login Screen & Filling Credentials ────
-      setStep('Step 1 / 36 — Starting at Login: Verifying Credentials...');
+      // ──── STEP 1 / 55: Starting on Login Screen & Filling Credentials ────
+      setStep('Step 1 / 55 — Starting at Login: Verifying Credentials...');
       if (typeof go === 'function') go('login');
       await wait(600);
       showCursor();
@@ -4229,8 +4238,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(300);
 
-      // ──── STEP 2 / 36: Toggling Password Visibility ────
-      setStep('Step 2 / 36 — Toggling Password Visibility On & Off...');
+      // ──── STEP 2 / 55: Toggling Password Visibility ────
+      setStep('Step 2 / 55 — Toggling Password Visibility On & Off...');
       const eyeBtn = document.querySelector('#screen-login .icon-field-right');
       if (eyeBtn) {
         await moveCursorTo(eyeBtn);
@@ -4241,8 +4250,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(300);
       }
 
-      // ──── STEP 3 / 36: Testing "Forgot Password?" Link ────
-      setStep('Step 3 / 36 — Testing Security: Clicking "Forgot Password?"...');
+      // ──── STEP 3 / 55: Testing "Forgot Password?" Link ────
+      setStep('Step 3 / 55 — Testing Security: Clicking "Forgot Password?"...');
       const forgotLink = document.querySelector('#screen-login .field a');
       if (forgotLink) {
         await moveCursorTo(forgotLink);
@@ -4251,8 +4260,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(600);
       }
 
-      // ──── STEP 4 / 36: Authenticating & Entering DisputeOps AI Portal ────
-      setStep('Step 4 / 36 — Authenticating: Entering DisputeOps AI Portal...');
+      // ──── STEP 4 / 55: Authenticating & Entering DisputeOps AI Portal ────
+      setStep('Step 4 / 55 — Authenticating: Entering DisputeOps AI Portal...');
       const loginBtn = document.getElementById('loginBtn');
       if (loginBtn) {
         await moveCursorTo(loginBtn);
@@ -4263,8 +4272,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(1100);
 
-      // ──── STEP 5 / 36: Dashboard Date Filter - Last 7 Days ────
-      setStep('Step 5 / 36 — Dashboard: Filtering to Last 7 Days...');
+      // ──── STEP 5 / 55: Dashboard Date Filter - Last 7 Days ────
+      setStep('Step 5 / 55 — Dashboard: Filtering to Last 7 Days...');
       const dateSelect = document.getElementById('dashDateFilterSelect');
       if (dateSelect) {
         await scrollIntoViewSmooth(dateSelect);
@@ -4276,8 +4285,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(800);
 
-      // ──── STEP 6 / 36: Testing Custom Date Range Filter ────
-      setStep('Step 6 / 36 — Dashboard: Revealing Custom Date Range Picker...');
+      // ──── STEP 6 / 55: Testing Custom Date Range Filter ────
+      setStep('Step 6 / 55 — Dashboard: Revealing Custom Date Range Picker...');
       if (dateSelect) {
         dateSelect.value = 'custom';
         dateSelect.dispatchEvent(new Event('change', { bubbles: true }));
@@ -4293,8 +4302,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(300);
       }
 
-      // ──── STEP 7 / 36: Restoring Date Filter to Last 30 Days ────
-      setStep('Step 7 / 36 — Dashboard: Setting Date Range to Last 30 Days...');
+      // ──── STEP 7 / 55: Restoring Date Filter to Last 30 Days ────
+      setStep('Step 7 / 55 — Dashboard: Setting Date Range to Last 30 Days...');
       if (dateSelect) {
         dateSelect.value = '30days';
         dateSelect.dispatchEvent(new Event('change', { bubbles: true }));
@@ -4302,8 +4311,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(700);
 
-      // ──── STEP 8 / 36: Stat Card 1 - Total Disputes ────
-      setStep('Step 8 / 36 — Metric Cards: Clicking Total Disputes...');
+      // ──── STEP 8 / 55: Stat Card 1 - Total Disputes ────
+      setStep('Step 8 / 55 — Metric Cards: Clicking Total Disputes...');
       const statTotal = document.querySelector('#screen-dashboard .stat-card.card-pink');
       if (statTotal) {
         await scrollIntoViewSmooth(statTotal);
@@ -4313,8 +4322,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(800);
       }
 
-      // ──── STEP 9 / 36: Stat Card 2 - Pending Disputes ────
-      setStep('Step 9 / 36 — Metric Cards: Clicking Pending Disputes...');
+      // ──── STEP 9 / 55: Stat Card 2 - Pending Disputes ────
+      setStep('Step 9 / 55 — Metric Cards: Clicking Pending Disputes...');
       if (typeof go === 'function') go('dashboard');
       await wait(400);
       const statPending = document.querySelector('#screen-dashboard .stat-card.card-yellow');
@@ -4326,8 +4335,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(800);
       }
 
-      // ──── STEP 10 / 36: Stat Card 3 - Resolved Disputes ────
-      setStep('Step 10 / 36 — Metric Cards: Clicking Resolved Disputes...');
+      // ──── STEP 10 / 55: Stat Card 3 - Resolved Disputes ────
+      setStep('Step 10 / 55 — Metric Cards: Clicking Resolved Disputes...');
       if (typeof go === 'function') go('dashboard');
       await wait(400);
       const statResolved = document.querySelector('#screen-dashboard .stat-card.card-green');
@@ -4339,8 +4348,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(800);
       }
 
-      // ──── STEP 11 / 36: Returning to Dashboard ────
-      setStep('Step 11 / 36 — Navigation: Returning to Dashboard Overview...');
+      // ──── STEP 11 / 55: Returning to Dashboard ────
+      setStep('Step 11 / 55 — Navigation: Returning to Dashboard Overview...');
       const dashNavBtn = document.querySelector('#screen-chargeback .nav-item:nth-child(1)');
       if (dashNavBtn) {
         await moveCursorTo(dashNavBtn);
@@ -4351,8 +4360,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(700);
 
-      // ──── STEP 12 / 36: Urgency Card - Due Today ────
-      setStep('Step 12 / 36 — Due Date Urgency: Clicking "Due Today"...');
+      // ──── STEP 12 / 55: Urgency Card - Due Today ────
+      setStep('Step 12 / 55 — Due Date Urgency: Clicking "Due Today"...');
       const dueToday = document.querySelector('#screen-dashboard .due-card.due-red');
       if (dueToday) {
         await scrollIntoViewSmooth(dueToday);
@@ -4362,8 +4371,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(800);
       }
 
-      // ──── STEP 13 / 36: Urgency Card - Due Tomorrow ────
-      setStep('Step 13 / 36 — Due Date Urgency: Clicking "Due Tomorrow"...');
+      // ──── STEP 13 / 55: Urgency Card - Due Tomorrow ────
+      setStep('Step 13 / 55 — Due Date Urgency: Clicking "Due Tomorrow"...');
       if (typeof go === 'function') go('dashboard');
       await wait(400);
       const dueTomorrow = document.querySelector('#screen-dashboard .due-card.due-amber');
@@ -4375,8 +4384,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(800);
       }
 
-      // ──── STEP 14 / 36: Urgency Card - Due in 2 to 7 Days ────
-      setStep('Step 14 / 36 — Due Date Urgency: Clicking "Due in 2 – 7 Days"...');
+      // ──── STEP 14 / 55: Urgency Card - Due in 2 to 7 Days ────
+      setStep('Step 14 / 55 — Due Date Urgency: Clicking "Due in 2 – 7 Days"...');
       if (typeof go === 'function') go('dashboard');
       await wait(400);
       const dueWeek = document.querySelector('#screen-dashboard .due-card.due-blue');
@@ -4388,8 +4397,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(800);
       }
 
-      // ──── STEP 15 / 36: Urgency Panel Header Link - View All ────
-      setStep('Step 15 / 36 — Due Date Panel: Clicking "View All (6) →"...');
+      // ──── STEP 15 / 55: Urgency Panel Header Link - View All ────
+      setStep('Step 15 / 55 — Due Date Panel: Clicking "View All (6) →"...');
       if (typeof go === 'function') go('dashboard');
       await wait(400);
       const dueViewAll = document.querySelector('#screen-dashboard .due-date-panel-full .v-all');
@@ -4401,8 +4410,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(700);
       }
 
-      // ──── STEP 16 / 36: Card Network Chart Date Filter ────
-      setStep('Step 16 / 36 — Card Network Chart: Changing Chart Date Filter...');
+      // ──── STEP 16 / 55: Card Network Chart Date Filter ────
+      setStep('Step 16 / 55 — Card Network Chart: Changing Chart Date Filter...');
       if (typeof go === 'function') go('dashboard');
       await wait(400);
       const chartSelect = document.getElementById('chartNetworkDateSelect');
@@ -4416,8 +4425,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(600);
       }
 
-      // ──── STEP 17 / 36: Scheme Legend Badges ────
-      setStep('Step 17 / 36 — Exploring Card Scheme Legends (Visa, Mastercard, RuPay, Jaywan)...');
+      // ──── STEP 17 / 55: Scheme Legend Badges ────
+      setStep('Step 17 / 55 — Exploring Card Scheme Legends (Visa, Mastercard, RuPay, Jaywan)...');
       const legends = document.querySelectorAll('#screen-dashboard .chart-legend span');
       for (let i = 0; i < legends.length; i++) {
         if (!tourActive) return;
@@ -4425,8 +4434,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(220);
       }
 
-      // ──── STEP 18 / 36: Stacked Bar Chart Segments ────
-      setStep('Step 18 / 36 — Inspecting Stacked Bar Chart Segments & Percentages...');
+      // ──── STEP 18 / 55: Stacked Bar Chart Segments ────
+      setStep('Step 18 / 55 — Inspecting Stacked Bar Chart Segments & Percentages...');
       const segments = document.querySelectorAll('#screen-dashboard .stacked-bar-track .bar-seg');
       for (let i = 0; i < Math.min(segments.length, 6); i++) {
         if (!tourActive) return;
@@ -4434,19 +4443,18 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(200);
       }
 
-      // ──── STEP 19 / 36: Recent Cases Table - Opening Representment Modal ────
-      setStep('Step 19 / 36 — Recent Cases Table: Clicking Row to Open Quick Modal...');
-      const recentRow = document.querySelector('#screen-dashboard .cases-tbl tbody tr');
-      if (recentRow) {
-        await scrollIntoViewSmooth(recentRow);
-        await moveCursorTo(recentRow);
-        await wait(300);
-        await simulateClick(recentRow);
-        await wait(1000);
+      // ──── STEP 19 / 55: Recent Cases Table - Opening Representment Modal ────
+      setStep('Step 19 / 55 — Recent Cases Table: Clicking Row to Open Representment Modal...');
+      if (typeof openRepresentModalDialog === 'function') {
+        openRepresentModalDialog('CB-2026-611', '₹ 3,782.00', 'Reason 10.4 — Fraud CNP');
+      } else {
+        const m = document.getElementById('modalOverlay');
+        if (m) m.classList.add('show');
       }
+      await wait(1000);
 
-      // ──── STEP 20 / 36: Rebuttal Template Select in Modal ────
-      setStep('Step 20 / 36 — Representment Modal: Selecting Rebuttal Template...');
+      // ──── STEP 20 / 55: Rebuttal Template Select in Modal ────
+      setStep('Step 20 / 55 — Representment Modal: Selecting Rebuttal Template Option...');
       const modalSelect = document.querySelector('#modalOverlay select');
       if (modalSelect) {
         await moveCursorTo(modalSelect);
@@ -4457,8 +4465,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(500);
       }
 
-      // ──── STEP 21 / 36: Evidence Upload Dropzone in Modal ────
-      setStep('Step 21 / 36 — Representment Modal: Clicking Evidence Upload Dropzone...');
+      // ──── STEP 21 / 55: Evidence Upload Dropzone in Modal ────
+      setStep('Step 21 / 55 — Representment Modal: Clicking Evidence Upload Dropzone...');
       const dropzone = document.querySelector('#modalOverlay .dropzone');
       if (dropzone) {
         await moveCursorTo(dropzone);
@@ -4468,8 +4476,22 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(600);
       }
 
-      // ──── STEP 22 / 36: Submitting Representment & Closing Modal ────
-      setStep('Step 22 / 36 — Representment Modal: Submitting Evidence Package...');
+      // ──── STEP 22 / 55: Accept Liability Button in Representment Modal ────
+      setStep('Step 22 / 55 — Representment Modal: Clicking "Accept Liability" Button...');
+      const repAcceptBtn = document.querySelector('#modalOverlay .act-btn-sec');
+      if (repAcceptBtn) {
+        await moveCursorTo(repAcceptBtn);
+        await wait(300);
+        await simulateClick(repAcceptBtn);
+        await wait(600);
+      }
+
+      // ──── STEP 23 / 55: Reopening Modal & Clicking Submit Representment ────
+      setStep('Step 23 / 55 — Representment Modal: Clicking "Submit Representment" Button...');
+      if (typeof openRepresentModalDialog === 'function') {
+        openRepresentModalDialog('CB-2026-611', '₹ 3,782.00', 'Reason 10.4 — Fraud CNP');
+      }
+      await wait(600);
       const submitRepBtn = document.querySelector('#modalOverlay .btn-login');
       if (submitRepBtn) {
         await moveCursorTo(submitRepBtn);
@@ -4477,10 +4499,24 @@ document.addEventListener('DOMContentLoaded', () => {
         await simulateClick(submitRepBtn);
         await wait(800);
       }
+
+      // ──── STEP 24 / 55: Testing Modal Close (X) Button ────
+      setStep('Step 24 / 55 — Representment Modal: Testing Close (X) Button...');
+      if (typeof openRepresentModalDialog === 'function') {
+        openRepresentModalDialog('CB-2026-611', '₹ 3,782.00', 'Reason 10.4 — Fraud CNP');
+      }
+      await wait(500);
+      const repCloseX = document.querySelector('#modalOverlay .close-btn');
+      if (repCloseX) {
+        await moveCursorTo(repCloseX);
+        await wait(300);
+        await simulateClick(repCloseX);
+        await wait(600);
+      }
       document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
 
-      // ──── STEP 23 / 36: Dashboard Table Pagination Controls ────
-      setStep('Step 23 / 36 — Dashboard Table: Clicking Pagination Pages 2, 3 & Next...');
+      // ──── STEP 25 / 55: Dashboard Table Pagination Controls ────
+      setStep('Step 25 / 55 — Dashboard Table: Clicking Pagination Pages 2, 3 & Next...');
       const pageBtns = document.querySelectorAll('#screen-dashboard .pager-btns button');
       for (let i = 1; i < Math.min(pageBtns.length, 4); i++) {
         if (!tourActive) return;
@@ -4491,8 +4527,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(350);
       }
 
-      // ──── STEP 24 / 36: Navigating to Dispute Management ────
-      setStep('Step 24 / 36 — Sidebar: Navigating to Dispute Management Operations...');
+      // ──── STEP 26 / 55: Navigating to Dispute Management ────
+      setStep('Step 26 / 55 — Sidebar: Navigating to Dispute Management Operations...');
       const dmNavBtn = document.querySelector('#screen-dashboard .nav-item:nth-child(2)');
       if (dmNavBtn) {
         await scrollIntoViewSmooth(dmNavBtn);
@@ -4504,8 +4540,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(800);
 
-      // ──── STEP 25 / 36: Filter Tab - Under Review ────
-      setStep('Step 25 / 36 — Tab Filtering: Switching to "Under Review" Tab...');
+      // ──── STEP 27 / 55: Filter Tab - Under Review ────
+      setStep('Step 27 / 55 — Tab Filtering: Switching to "Under Review" Tab...');
       const tabReview = document.querySelector('#screen-chargeback .cb-tab-btn[data-tab="review"]');
       if (tabReview) {
         await scrollIntoViewSmooth(tabReview);
@@ -4515,8 +4551,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(700);
       }
 
-      // ──── STEP 26 / 36: Filter Tab - Closed ────
-      setStep('Step 26 / 36 — Tab Filtering: Switching to "Closed & Resolved" Tab...');
+      // ──── STEP 28 / 55: Filter Tab - Closed ────
+      setStep('Step 28 / 55 — Tab Filtering: Switching to "Closed & Resolved" Tab...');
       const tabClosed = document.querySelector('#screen-chargeback .cb-tab-btn[data-tab="closed"]');
       if (tabClosed) {
         await moveCursorTo(tabClosed);
@@ -4525,8 +4561,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(700);
       }
 
-      // ──── STEP 27 / 36: Filter Tab - All Disputes ────
-      setStep('Step 27 / 36 — Tab Filtering: Switching to "All Disputes" Tab...');
+      // ──── STEP 29 / 55: Filter Tab - All Disputes ────
+      setStep('Step 29 / 55 — Tab Filtering: Switching to "All Disputes" Tab...');
       const tabAll = document.querySelector('#screen-chargeback .cb-tab-btn[data-tab="all"]');
       if (tabAll) {
         await moveCursorTo(tabAll);
@@ -4535,8 +4571,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(700);
       }
 
-      // ──── STEP 28 / 36: Filter Tab - Action Required ────
-      setStep('Step 28 / 36 — Tab Filtering: Returning to "Action Required" Tab...');
+      // ──── STEP 30 / 55: Filter Tab - Action Required ────
+      setStep('Step 30 / 55 — Tab Filtering: Returning to "Action Required" Tab...');
       const tabRequired = document.querySelector('#screen-chargeback .cb-tab-btn[data-tab="required"]');
       if (tabRequired) {
         await moveCursorTo(tabRequired);
@@ -4545,8 +4581,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(700);
       }
 
-      // ──── STEP 29 / 36: Sub-Filter Stat Cards ────
-      setStep('Step 29 / 36 — Sub-Filter Stats: Clicking Due Today, Tomorrow, 2–7 Days...');
+      // ──── STEP 31 / 55: Sub-Filter Stat Cards ────
+      setStep('Step 31 / 55 — Sub-Filter Stats: Clicking Due Today, Tomorrow, 2–7 Days...');
       const subCards = document.querySelectorAll('#screen-chargeback #disputesStatRow .stat-card');
       for (let i = 0; i < Math.min(subCards.length, 3); i++) {
         if (!tourActive) return;
@@ -4559,8 +4595,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (typeof filterCbTab === 'function') filterCbTab('required');
       await wait(400);
 
-      // ──── STEP 30 / 36: Quick Search Box ────
-      setStep('Step 30 / 36 — Toolbar: Live Quick Search by Dispute ID & Scheme...');
+      // ──── STEP 32 / 55: Quick Search Box ────
+      setStep('Step 32 / 55 — Toolbar: Live Quick Search by Dispute ID & Scheme...');
       const searchInput = document.getElementById('cbSearchInput');
       if (searchInput) {
         await scrollIntoViewSmooth(searchInput);
@@ -4576,8 +4612,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(500);
 
-      // ──── STEP 31 / 36: Toolbar Date Filter ────
-      setStep('Step 31 / 36 — Toolbar: Cycling Date Period (Last 7 Days & All Time)...');
+      // ──── STEP 33 / 55: Toolbar Date Filter ────
+      setStep('Step 33 / 55 — Toolbar: Cycling Date Period (Last 7 Days & All Time)...');
       const cbDate = document.getElementById('cbDateSelect');
       if (cbDate) {
         await moveCursorTo(cbDate);
@@ -4592,8 +4628,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(500);
       }
 
-      // ──── STEP 32 / 36: Advanced Search Drawer Toggle ────
-      setStep('Step 32 / 36 — Advanced Filters: Opening Advanced Search Drawer...');
+      // ──── STEP 34 / 55: Advanced Search Drawer Toggle ────
+      setStep('Step 34 / 55 — Advanced Filters: Opening Advanced Search Drawer...');
       const advBtn = document.getElementById('advSearchToggleBtn');
       if (advBtn) {
         await moveCursorTo(advBtn);
@@ -4602,8 +4638,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(600);
       }
 
-      // ──── STEP 33 / 36: Configuring Advanced Filters & Applying ────
-      setStep('Step 33 / 36 — Advanced Filters: Selecting Criteria, Applying & Resetting...');
+      // ──── STEP 35 / 55: Configuring Advanced Filters & Applying ────
+      setStep('Step 35 / 55 — Advanced Filters: Selecting Criteria, Applying & Resetting...');
       const advType = document.getElementById('advDisputeType');
       const advScheme = document.getElementById('advScheme');
       const advTid = document.getElementById('advTid');
@@ -4642,8 +4678,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(400);
       }
 
-      // ──── STEP 34 / 36: Export CSV Button ────
-      setStep('Step 34 / 36 — Data Export: Clicking "Export CSV" Button...');
+      // ──── STEP 36 / 55: Export CSV Button ────
+      setStep('Step 36 / 55 — Data Export: Clicking "Export CSV" Button...');
       const exportBtn = document.querySelector('#screen-chargeback .btn-act-filled');
       if (exportBtn) {
         await scrollIntoViewSmooth(exportBtn);
@@ -4653,73 +4689,212 @@ document.addEventListener('DOMContentLoaded', () => {
         await wait(800);
       }
 
-      // ──── STEP 35 / 36: Opening Dispute Hub & Navigating All Tabs ────
-      setStep('Step 35 / 36 — Dispute Hub: Exploring Case Details, Txn Info, Evidence & Comments...');
+      // ──── STEP 37 / 55: Action Column "Take Action" Button (Direct Modal Open) ────
+      setStep('Step 37 / 55 — Table Action Column: Clicking "Take Action" Button to Launch Modal...');
       if (typeof filterCbTab === 'function') filterCbTab('required');
       await wait(500);
-      const rowToOpen = document.querySelector('#screen-chargeback #cbTableBody tr');
-      if (rowToOpen) {
-        await scrollIntoViewSmooth(rowToOpen);
-        await moveCursorTo(rowToOpen);
+      const actionTableBtn = document.querySelector('#screen-chargeback #cbTableBody .btn-take-action');
+      if (actionTableBtn) {
+        await scrollIntoViewSmooth(actionTableBtn);
+        await moveCursorTo(actionTableBtn);
         await wait(300);
-        await simulateClick(rowToOpen);
+        await simulateClick(actionTableBtn);
+      } else if (typeof openTakeActionModal === 'function') {
+        openTakeActionModal('CB-2026-015');
+      }
+      await wait(900);
+
+      // ──── STEP 38 / 55: Take Action Modal - Decline/Reject Branch ────
+      setStep('Step 38 / 55 — Take Action Modal: Clicking "Reject" Button to Open Decline Form...');
+      const modalDeclineBtn = document.querySelector('#actionStep1 .btn-decline-action');
+      if (modalDeclineBtn) {
+        await moveCursorTo(modalDeclineBtn);
+        await wait(300);
+        await simulateClick(modalDeclineBtn);
+        await wait(700);
+      }
+
+      // ──── STEP 39 / 55: Take Action Modal - Typing Rejection Remark ────
+      setStep('Step 39 / 55 — Take Action Modal: Entering Mandatory Rejection Remark & Attach File...');
+      const remarkBox = document.getElementById('declineRemarkTxt');
+      if (remarkBox) {
+        await moveCursorTo(remarkBox);
+        await typeInInput(remarkBox, 'Fraud claim verified with courier receipt and customer signature.');
+        await wait(500);
+      }
+      const attachBtn = document.querySelector('#actionStep2Decline .btn-take-action');
+      if (attachBtn) {
+        await moveCursorTo(attachBtn);
+        await wait(250);
+        if (typeof pingToast === 'function') pingToast('Supporting proof document attached');
+        await wait(400);
+      }
+
+      // ──── STEP 40 / 55: Take Action Modal - Cancel Decline & Return to Step 1 ────
+      setStep('Step 40 / 55 — Take Action Modal: Clicking "Cancel" to Return to Decision Screen...');
+      const cancelDeclineBtn = document.querySelector('#actionStep2Decline .btn-act-outlined');
+      if (cancelDeclineBtn) {
+        await moveCursorTo(cancelDeclineBtn);
+        await wait(300);
+        await simulateClick(cancelDeclineBtn);
+        await wait(700);
+      }
+
+      // ──── STEP 41 / 55: Take Action Modal - Testing Header Close (X) Button ────
+      setStep('Step 41 / 55 — Take Action Modal: Testing Close (X) Button...');
+      const actionCloseX = document.querySelector('#takeActionModal .close-btn');
+      if (actionCloseX) {
+        await moveCursorTo(actionCloseX);
+        await wait(300);
+        await simulateClick(actionCloseX);
+        await wait(700);
+      }
+
+      // ──── STEP 42 / 55: Table Row Click to Open Operations Hub ────
+      setStep('Step 42 / 55 — Table Row: Clicking Row to Open Full Case Details & Ops Hub...');
+      const hubRowBtn = document.querySelector('#screen-chargeback #cbTableBody tr');
+      if (hubRowBtn) {
+        await scrollIntoViewSmooth(hubRowBtn);
+        await moveCursorTo(hubRowBtn);
+        await wait(300);
+        await simulateClick(hubRowBtn);
       } else if (typeof openRepresentModal === 'function') {
         openRepresentModal('CB-2026-015');
       }
       await wait(1200);
 
-      const hubTabs = document.querySelectorAll('.hub-tab-btn');
-      for (let i = 0; i < hubTabs.length; i++) {
-        if (!tourActive) return;
-        await moveCursorTo(hubTabs[i]);
-        await wait(220);
-        await simulateClick(hubTabs[i]);
+      // ──── STEP 43 / 55: Hub Header - Copy Dispute ID Button ────
+      setStep('Step 43 / 55 — Dispute Hub: Clicking "Copy Dispute ID" Button...');
+      const hubCopyBtn = document.querySelector('.hub-copy-id-btn');
+      if (hubCopyBtn) {
+        await moveCursorTo(hubCopyBtn);
+        await wait(300);
+        await simulateClick(hubCopyBtn);
         await wait(600);
       }
-      const copyIdBtn = document.querySelector('.hub-copy-id-btn');
-      if (copyIdBtn) {
-        await moveCursorTo(copyIdBtn);
-        await wait(250);
-        await simulateClick(copyIdBtn);
-        await wait(500);
+
+      // ──── STEP 44 / 55: Hub Queue Filter - Under Review ────
+      setStep('Step 44 / 55 — Left Queue: Filtering Queue by "Under Review"...');
+      const hqReview = document.querySelector('.hub-q-filter-btn[data-hqf="review"]');
+      if (hqReview) {
+        await moveCursorTo(hqReview);
+        await wait(300);
+        await simulateClick(hqReview);
+        await wait(700);
       }
 
-      // ──── STEP 36 / 36: Multi-Step Take Action Flow & Tour Completion ────
-      setStep('Step 36 / 36 — Taking Multi-Step Action: Accept Dispute, Zoom Controls & Return Home...');
+      // ──── STEP 45 / 55: Hub Queue Filter - Closed ────
+      setStep('Step 45 / 55 — Left Queue: Filtering Queue by "Closed"...');
+      const hqClosed = document.querySelector('.hub-q-filter-btn[data-hqf="closed"]');
+      if (hqClosed) {
+        await moveCursorTo(hqClosed);
+        await wait(300);
+        await simulateClick(hqClosed);
+        await wait(700);
+      }
+
+      // ──── STEP 46 / 55: Hub Queue Filter - All Disputes ────
+      setStep('Step 46 / 55 — Left Queue: Restoring Queue Filter to "All Dispute"...');
+      const hqAll = document.querySelector('.hub-q-filter-btn[data-hqf="all"]');
+      if (hqAll) {
+        await moveCursorTo(hqAll);
+        await wait(300);
+        await simulateClick(hqAll);
+        await wait(700);
+      }
+
+      // ──── STEP 47 / 55: Hub Queue Item Selection ────
+      setStep('Step 47 / 55 — Left Queue: Clicking Queue Item to Load Case...');
+      const qItem = document.querySelector('#hubQueueList .hub-queue-item');
+      if (qItem) {
+        await moveCursorTo(qItem);
+        await wait(300);
+        await simulateClick(qItem);
+        await wait(800);
+      }
+
+      // ──── STEP 48 / 55: Hub Tabs - Transaction Info ────
+      setStep('Step 48 / 55 — Dispute Hub Tabs: Switching to "Transaction Info"...');
+      const tabTxn = document.querySelectorAll('.hub-tab-btn')[1];
+      if (tabTxn) {
+        await moveCursorTo(tabTxn);
+        await wait(300);
+        await simulateClick(tabTxn);
+        await wait(800);
+      }
+
+      // ──── STEP 49 / 55: Hub Tabs - Evidence Documents & Add Evidence ────
+      setStep('Step 49 / 55 — Dispute Hub Tabs: Switching to "Evidence" & Clicking "+ Add Evidence"...');
+      const tabEv = document.querySelectorAll('.hub-tab-btn')[2];
+      if (tabEv) {
+        await moveCursorTo(tabEv);
+        await wait(300);
+        await simulateClick(tabEv);
+        await wait(700);
+      }
+      const addEvBtn = document.querySelector('#hubViewEvidence button');
+      if (addEvBtn) {
+        await moveCursorTo(addEvBtn);
+        await wait(300);
+        await simulateClick(addEvBtn);
+        await wait(700);
+      }
+
+      // ──── STEP 50 / 55: Hub Tabs - Lifecycle Audit Trail Comments ────
+      setStep('Step 50 / 55 — Dispute Hub Tabs: Switching to "Comments & Audit Trail"...');
+      const tabComments = document.querySelectorAll('.hub-tab-btn')[3];
+      if (tabComments) {
+        await moveCursorTo(tabComments);
+        await wait(300);
+        await simulateClick(tabComments);
+        await wait(800);
+      }
+
+      // ──── STEP 51 / 55: Hub Right Column - View All Timeline ────
+      setStep('Step 51 / 55 — Right Column: Clicking "View All" on Mini Timeline...');
+      const miniTlViewAll = document.querySelectorAll('.hub-panel-viewall')[0];
+      if (miniTlViewAll) {
+        await moveCursorTo(miniTlViewAll);
+        await wait(300);
+        await simulateClick(miniTlViewAll);
+        await wait(600);
+      }
+
+      // ──── STEP 52 / 55: Hub Header Action - Accept Dispute Modal Flow ────
+      setStep('Step 52 / 55 — Dispute Hub Header: Clicking "Accept Dispute" to Launch Modal...');
       const hubAcceptBtn = document.querySelector('.hub-btn-accept') || document.querySelector('#hubActionButtonsGroup button');
       if (hubAcceptBtn) {
         await moveCursorTo(hubAcceptBtn);
         await wait(300);
         await simulateClick(hubAcceptBtn);
         await wait(900);
-
-        const modalAcceptConfirm = document.querySelector('#takeActionModal .btn-consider-action') || document.querySelector('#actionStep1 .btn-consider-action');
-        if (modalAcceptConfirm) {
-          await moveCursorTo(modalAcceptConfirm);
-          await wait(300);
-          await simulateClick(modalAcceptConfirm);
-          await wait(800);
-        }
-
-        const confirmYesBtn = document.querySelector('#actionStep2Consider .btn-consider-action');
-        if (confirmYesBtn) {
-          await moveCursorTo(confirmYesBtn);
-          await wait(300);
-          await simulateClick(confirmYesBtn);
-          await wait(1100);
-        }
-
-        const doneCloseBtn = document.querySelector('#actionStep3Success button') || document.querySelector('#takeActionModal .btn-decline-action');
-        if (doneCloseBtn) {
-          await moveCursorTo(doneCloseBtn);
-          await wait(300);
-          await simulateClick(doneCloseBtn);
-          await wait(600);
-        }
+      } else if (typeof executeConsiderApproveModal === 'function') {
+        executeConsiderApproveModal();
+        await wait(900);
       }
 
+      // ──── STEP 53 / 55: Modal Confirmation - Yes, Accept Dispute ────
+      setStep('Step 53 / 55 — Take Action Modal: Confirming "YES, ACCEPT DISPUTE"...');
+      const confirmYesBtn = document.querySelector('#actionStep2Consider .btn-consider-action');
+      if (confirmYesBtn) {
+        await moveCursorTo(confirmYesBtn);
+        await wait(300);
+        await simulateClick(confirmYesBtn);
+        await wait(1100);
+      }
 
-      // Return to Dashboard overview via Sidebar Logo
+      // ──── STEP 54 / 55: Modal Success Screen - Done & Close ────
+      setStep('Step 54 / 55 — Take Action Modal: Viewing Success Result & Clicking "DONE & CLOSE"...');
+      const doneCloseBtn = document.querySelector('#actionStep3Success button');
+      if (doneCloseBtn) {
+        await moveCursorTo(doneCloseBtn);
+        await wait(300);
+        await simulateClick(doneCloseBtn);
+        await wait(700);
+      }
+
+      // ──── STEP 55 / 55: Return to Dashboard Overview via Sidebar Brand ────
+      setStep('Step 55 / 55 — Navigation: Returning to Dashboard Overview via Sidebar Brand...');
       const sidebarBrand = document.querySelector('#screen-chargeback .sidebar-logo') || document.querySelector('.sidebar-logo');
       if (sidebarBrand) {
         await moveCursorTo(sidebarBrand);
@@ -4731,7 +4906,7 @@ document.addEventListener('DOMContentLoaded', () => {
       await wait(800);
 
       // Finish
-      setStep('✅ Tour Complete! Every single button, filter & feature has been explored.');
+      setStep('✅ Tour Complete! Every single button, filter & modal has been clicked.');
       await wait(3000);
 
       stopAutoTour();
