@@ -4947,11 +4947,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       await wait(800);
 
-      // Finish
-      setStep('✅ Tour Complete! Every single button, filter & modal has been clicked.');
-      await wait(3000);
+      // Finish cycle and auto-restart from step 1
+      setStep('✅ Tour Complete! Restarting automatically in 2 seconds...');
+      await wait(2200);
 
-      stopAutoTour();
+      // Reset any open modals or drawers before looping
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+      const advDrawer = document.getElementById('advSearchPanel');
+      if (advDrawer) advDrawer.classList.remove('open');
+
+      // Auto loop from beginning if still active
+      if (tourActive) {
+        runTour();
+      }
 
     } catch (e) {
       if (e !== 'aborted') console.warn('Tour error:', e);
