@@ -1570,14 +1570,14 @@ footer.pager{ display:flex; align-items:center; justify-content:space-between; p
 #demoVirtualCursor {
   position: fixed;
   top: 50%; left: 50%;
-  width: 32px; height: 32px;
-  z-index: 999999;
+  width: 34px; height: 34px;
+  z-index: 2147483647 !important;
   pointer-events: none;
   transition: top 0.75s cubic-bezier(0.2, 0.8, 0.25, 1), left 0.75s cubic-bezier(0.2, 0.8, 0.25, 1), transform 0.2s ease;
   display: none;
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6));
 }
-#demoVirtualCursor.active { display: block; }
+#demoVirtualCursor.active { display: block !important; }
 #demoVirtualCursor.clicking { transform: scale(0.82); }
 
 .demo-click-ripple {
@@ -1585,9 +1585,9 @@ footer.pager{ display:flex; align-items:center; justify-content:space-between; p
   width: 44px; height: 44px;
   border-radius: 50%;
   border: 2px solid #38BDF8;
-  background: rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.45);
   pointer-events: none;
-  z-index: 999998;
+  z-index: 2147483646 !important;
   transform: translate(-50%, -50%) scale(0.2);
   opacity: 1;
   animation: clickRippleAnim 0.65s cubic-bezier(0, 0, 0.2, 1) forwards;
@@ -2445,6 +2445,7 @@ Export CSV
 </main>
 </div>
 </div>
+</div> <!-- End Zoom Container -->
 
 <!-- ============ TAKE ACTION FOR DISPUTE MODAL ============ -->
 <div class="modal-overlay" id="takeActionModal">
@@ -2600,7 +2601,6 @@ The dispute has been successfully approved by Admin. Refund processing and settl
 </div>
 </div>
 </div>
-</div> <!-- End Zoom Container -->
 
 <script>
 // GLOBAL TOAST NOTIFICATION HELPER
@@ -4187,10 +4187,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showCursor() {
-    if (cursor) cursor.classList.add('active');
+    if (cursor) {
+      if (cursor.parentElement !== document.body) {
+        document.body.appendChild(cursor);
+      }
+      cursor.style.display = 'block';
+      cursor.classList.add('active');
+    }
   }
   function hideCursor() {
-    if (cursor) cursor.classList.remove('active');
+    if (cursor) {
+      cursor.classList.remove('active');
+      cursor.style.display = 'none';
+    }
   }
 
   const topCloseBtn = document.getElementById('btnTourTopRightClose');
@@ -4204,27 +4213,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (topCloseBtn) topCloseBtn.classList.remove('show');
   }
 
-  function moveCursorTo(el) {
-    return new Promise((resolve) => {
-      if (!el || !cursor) { resolve(); return; }
-      const rect = el.getBoundingClientRect();
-      const x = Math.max(10, Math.min(window.innerWidth - 30, rect.left + rect.width / 2));
-      const y = Math.max(10, Math.min(window.innerHeight - 30, rect.top + rect.height / 2));
-      cursor.style.left = x + 'px';
-      cursor.style.top = y + 'px';
-      setTimeout(resolve, 550);
-    });
+  async function moveCursorTo(el) {
+    if (!el || !cursor) return;
+    if (cursor.parentElement !== document.body) {
+      document.body.appendChild(cursor);
+    }
+    cursor.style.display = 'block';
+    cursor.classList.add('active');
+
+    let rect = el.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) {
+      await wait(150);
+      rect = el.getBoundingClientRect();
+    }
+
+    let x = rect.left + rect.width / 2;
+    let y = rect.top + rect.height / 2;
+    if (rect.width === 0 && rect.height === 0) {
+      x = window.innerWidth / 2;
+      y = window.innerHeight / 2;
+    } else {
+      x = Math.max(15, Math.min(window.innerWidth - 35, x));
+      y = Math.max(15, Math.min(window.innerHeight - 35, y));
+    }
+
+    cursor.style.left = x + 'px';
+    cursor.style.top = y + 'px';
+    await wait(550);
   }
 
   function simulateClick(el) {
     return new Promise((resolve) => {
       if (!el) { resolve(); return; }
-      if (cursor) cursor.classList.add('clicking');
+      if (cursor) {
+        cursor.style.display = 'block';
+        cursor.classList.add('active');
+        cursor.classList.add('clicking');
+      }
       const rect = el.getBoundingClientRect();
       const ripple = document.createElement('div');
       ripple.className = 'demo-click-ripple';
-      ripple.style.left = (rect.left + rect.width / 2) + 'px';
-      ripple.style.top = (rect.top + rect.height / 2) + 'px';
+      const rx = (rect.width > 0) ? (rect.left + rect.width / 2) : parseFloat(cursor.style.left || window.innerWidth / 2);
+      const ry = (rect.height > 0) ? (rect.top + rect.height / 2) : parseFloat(cursor.style.top || window.innerHeight / 2);
+      ripple.style.left = rx + 'px';
+      ripple.style.top = ry + 'px';
       document.body.appendChild(ripple);
       setTimeout(() => ripple.remove(), 700);
 
@@ -4520,20 +4552,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // ──── STEP 22 / 55: Accept Liability Button in Representment Modal ────
       setStep('Step 22 / 55 — Representment Modal: Clicking "Accept Liability" Button...');
+      const modalEl = document.getElementById('modalOverlay');
+      if (modalEl && !modalEl.classList.contains('show')) {
+        if (typeof openRepresentModalDialog === 'function') openRepresentModalDialog('CB-2026-611', '₹ 3,782.00', 'Reason 10.4 — Fraud CNP');
+        else modalEl.classList.add('show');
+        await wait(500);
+      }
       const repAcceptBtn = document.querySelector('#modalOverlay .act-btn-sec');
       if (repAcceptBtn) {
         await moveCursorTo(repAcceptBtn);
         await wait(300);
         await simulateClick(repAcceptBtn);
-        await wait(600);
+        await wait(700);
       }
 
       // ──── STEP 23 / 55: Reopening Modal & Clicking Submit Representment ────
       setStep('Step 23 / 55 — Representment Modal: Clicking "Submit Representment" Button...');
       if (typeof openRepresentModalDialog === 'function') {
         openRepresentModalDialog('CB-2026-611', '₹ 3,782.00', 'Reason 10.4 — Fraud CNP');
+      } else if (modalEl) {
+        modalEl.classList.add('show');
       }
-      await wait(600);
+      await wait(700);
       const submitRepBtn = document.querySelector('#modalOverlay .btn-login');
       if (submitRepBtn) {
         await moveCursorTo(submitRepBtn);
@@ -4546,8 +4586,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setStep('Step 24 / 55 — Representment Modal: Testing Close (X) Button...');
       if (typeof openRepresentModalDialog === 'function') {
         openRepresentModalDialog('CB-2026-611', '₹ 3,782.00', 'Reason 10.4 — Fraud CNP');
+      } else if (modalEl) {
+        modalEl.classList.add('show');
       }
-      await wait(500);
+      await wait(700);
       const repCloseX = document.querySelector('#modalOverlay .close-btn');
       if (repCloseX) {
         await moveCursorTo(repCloseX);
